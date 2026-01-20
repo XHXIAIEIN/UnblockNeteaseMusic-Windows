@@ -33,7 +33,7 @@ $icon = New-Object System.Drawing.Icon($iconStream)
 # 主窗口
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "UnblockNeteaseMusic"
-$form.Size = New-Object System.Drawing.Size(280, 220)
+$form.Size = New-Object System.Drawing.Size(280, 200)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
@@ -75,17 +75,36 @@ $lblSrc.AutoSize = $true
 $lblSrc.ForeColor = [System.Drawing.Color]::DarkGray
 $form.Controls.Add($lblSrc)
 
-# 使用说明
-$lblHelp = New-Object System.Windows.Forms.Label
-$lblHelp.Text = "网易云音乐: 设置 → 工具 → 自定义代理 → 重启"
+# 帮助链接
+$lblHelp = New-Object System.Windows.Forms.LinkLabel
+$lblHelp.Text = "使用说明"
 $lblHelp.Location = New-Object System.Drawing.Point(20, 95)
 $lblHelp.AutoSize = $true
-$lblHelp.ForeColor = [System.Drawing.Color]::DarkGray
+$lblHelp.LinkColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
+$lblHelp.Add_LinkClicked({
+    $helpForm = New-Object System.Windows.Forms.Form
+    $helpForm.Text = "使用说明"
+    $helpForm.Size = New-Object System.Drawing.Size(320, 240)
+    $helpForm.StartPosition = "CenterParent"
+    $helpForm.FormBorderStyle = "FixedDialog"
+    $helpForm.MaximizeBox = $false
+    $helpForm.MinimizeBox = $false
+    $helpForm.BackColor = [System.Drawing.Color]::White
+
+    $helpText = New-Object System.Windows.Forms.Label
+    $helpText.Text = "1. 启动本程序`n`n2. 打开网易云音乐客户端`n`n3. 设置 → 工具 → 自定义代理`n`n4. 服务器: 127.0.0.1`n    端口: $($cfg.port)`n    类型: HTTP`n`n5. 点击确定，重启客户端"
+    $helpText.Location = New-Object System.Drawing.Point(20, 20)
+    $helpText.Size = New-Object System.Drawing.Size(270, 170)
+    $helpText.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
+    $helpForm.Controls.Add($helpText)
+
+    $helpForm.ShowDialog()
+})
 $form.Controls.Add($lblHelp)
 
 # 进度条
 $progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Location = New-Object System.Drawing.Point(20, 128)
+$progressBar.Location = New-Object System.Drawing.Point(20, 108)
 $progressBar.Size = New-Object System.Drawing.Size(230, 8)
 $progressBar.Style = "Continuous"
 $progressBar.Visible = $false
@@ -102,7 +121,7 @@ $colorDarkGray = [System.Drawing.Color]::FromArgb(158, 158, 158)
 
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
-$btnStart.Location = New-Object System.Drawing.Point(20, 140)
+$btnStart.Location = New-Object System.Drawing.Point(20, 120)
 $btnStart.Size = New-Object System.Drawing.Size(230, 35)
 $btnStart.FlatStyle = "Flat"
 $btnStart.FlatAppearance.BorderSize = 0
@@ -119,7 +138,7 @@ $form.Controls.Add($btnStart)
 
 $btnStop = New-Object System.Windows.Forms.Button
 $btnStop.Text = "停止"
-$btnStop.Location = New-Object System.Drawing.Point(140, 140)
+$btnStop.Location = New-Object System.Drawing.Point(140, 120)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
 $btnStop.FlatAppearance.BorderSize = 0
