@@ -1,0 +1,27 @@
+{
+  "sources": ["kuwo", "kugou", "migu", "bilibili"],
+  "port": 8080,
+
+  "enableFlac": false,
+  "enableLocalVip": false,
+  "blockAds": false,
+  "selectMaxBr": false,
+  "minBr": 0,
+  "searchAlbum": false,
+  "followSourceOrder": false,
+
+  "strict": false,
+  "proxyUrl": "",
+  "forceHost": "",
+  "endpoint": "",
+  "cnrelay": "",
+
+  "neteaseCookie": "",
+  "qqCookie": "",
+  "miguCookie": "",
+  "jooxCookie": "",
+  "youtubeKey": "",
+
+  "logLevel": "info",
+  "noCache": false
+}
