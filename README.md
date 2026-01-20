@@ -4,16 +4,26 @@
 
 基于 [UnblockNeteaseMusic/server](https://github.com/UnblockNeteaseMusic/server) 项目。
 
+## 下载
+
+[![下载](https://img.shields.io/github/v/release/XHXIAIEIN/UnblockNeteaseMusic-Windows?label=下载&style=for-the-badge)](https://github.com/XHXIAIEIN/UnblockNeteaseMusic-Windows/releases/latest/download/UnblockNeteaseMusic-Windows.zip)
+
+或前往 [Releases](https://github.com/XHXIAIEIN/UnblockNeteaseMusic-Windows/releases) 页面下载。
+
+## 安装
+
+1. 下载并解压 `UnblockNeteaseMusic-Windows.zip`
+2. 双击 `gui/start.vbs`
+3. 首次运行会自动下载核心程序
+
 ## 使用
 
-1. 下载本项目
-2. 双击 `gui/start.vbs`
-3. 点击「启动」
-4. 网易云客户端设置代理：设置 → 工具 → 自定义代理
+1. 点击「启动」
+2. 网易云客户端设置代理：设置 → 工具 → 自定义代理
+   - 类型：`HTTP`
    - 服务器：`127.0.0.1`
    - 端口：`3610`
-   - 类型：`HTTP`
-5. 重启网易云音乐
+3. 点击确定，重启网易云音乐
 
 ## 配置
 
