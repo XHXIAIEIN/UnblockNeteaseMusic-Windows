@@ -93,7 +93,7 @@ gui/
     └── UnblockNeteaseMusic.ps1
 ```
 
-首次启动会自动从 [GitHub Releases](https://github.com/UnblockNeteaseMusic/server/releases) 下载 `unblockneteasemusic.exe` (~37MB) 到 res 文件夹。
+首次启动会自动从 [GitHub Releases](https://github.com/UnblockNeteaseMusic/server/releases/latest) 下载最新版 `unblockneteasemusic.exe` (~37MB) 到 res 文件夹。
 
 ## 致谢
 
