@@ -95,7 +95,7 @@ $colorDarkGray = [System.Drawing.Color]::FromArgb(158, 158, 158)
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
 $btnStart.Location = New-Object System.Drawing.Point(20, 120)
-$btnStart.Size = New-Object System.Drawing.Size(110, 35)
+$btnStart.Size = New-Object System.Drawing.Size(230, 35)
 $btnStart.FlatStyle = "Flat"
 $btnStart.FlatAppearance.BorderSize = 0
 $btnStart.ForeColor = [System.Drawing.Color]::White
@@ -118,7 +118,7 @@ $btnStop.FlatAppearance.BorderSize = 0
 $btnStop.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
 $btnStop.ForeColor = [System.Drawing.Color]::White
 $btnStop.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
-$btnStop.Enabled = $false
+$btnStop.Visible = $false
 $form.Controls.Add($btnStop)
 
 function Install-Cert {
@@ -159,10 +159,11 @@ function Start-Proxy {
         $lblInfo.Text = "代理 127.0.0.1:$($cfg.port)"
         $progressBar.Visible = $false
         $btnStart.Text = "运行中"
+        $btnStart.Size = New-Object System.Drawing.Size(110, 35)
         $btnStart.Enabled = $false
         $btnStart.BackColor = $colorGray
         $btnStart.ForeColor = $colorDarkGray
-        $btnStop.Enabled = $true
+        $btnStop.Visible = $true
     } catch {
         $lblStatus.Text = "启动失败"
         $lblStatus.ForeColor = $colorRed
@@ -216,10 +217,11 @@ $btnStop.Add_Click({
     $lblStatus.Text = "已停止"
     $lblStatus.ForeColor = $colorDarkGray
     $btnStart.Text = "启动"
+    $btnStart.Size = New-Object System.Drawing.Size(230, 35)
     $btnStart.Enabled = $true
     $btnStart.BackColor = $colorGreen
     $btnStart.ForeColor = [System.Drawing.Color]::White
-    $btnStop.Enabled = $false
+    $btnStop.Visible = $false
 })
 
 $form.Add_FormClosing({
