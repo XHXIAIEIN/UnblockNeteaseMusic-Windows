@@ -33,7 +33,7 @@ $icon = New-Object System.Drawing.Icon($iconStream)
 # 主窗口
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "UnblockNeteaseMusic"
-$form.Size = New-Object System.Drawing.Size(280, 200)
+$form.Size = New-Object System.Drawing.Size(280, 220)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
@@ -75,9 +75,17 @@ $lblSrc.AutoSize = $true
 $lblSrc.ForeColor = [System.Drawing.Color]::DarkGray
 $form.Controls.Add($lblSrc)
 
+# 使用说明
+$lblHelp = New-Object System.Windows.Forms.Label
+$lblHelp.Text = "网易云音乐: 设置 → 工具 → 自定义代理 → 重启"
+$lblHelp.Location = New-Object System.Drawing.Point(20, 95)
+$lblHelp.AutoSize = $true
+$lblHelp.ForeColor = [System.Drawing.Color]::DarkGray
+$form.Controls.Add($lblHelp)
+
 # 进度条
 $progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Location = New-Object System.Drawing.Point(20, 108)
+$progressBar.Location = New-Object System.Drawing.Point(20, 128)
 $progressBar.Size = New-Object System.Drawing.Size(230, 8)
 $progressBar.Style = "Continuous"
 $progressBar.Visible = $false
@@ -94,7 +102,7 @@ $colorDarkGray = [System.Drawing.Color]::FromArgb(158, 158, 158)
 
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
-$btnStart.Location = New-Object System.Drawing.Point(20, 120)
+$btnStart.Location = New-Object System.Drawing.Point(20, 140)
 $btnStart.Size = New-Object System.Drawing.Size(230, 35)
 $btnStart.FlatStyle = "Flat"
 $btnStart.FlatAppearance.BorderSize = 0
@@ -111,7 +119,7 @@ $form.Controls.Add($btnStart)
 
 $btnStop = New-Object System.Windows.Forms.Button
 $btnStop.Text = "停止"
-$btnStop.Location = New-Object System.Drawing.Point(140, 120)
+$btnStop.Location = New-Object System.Drawing.Point(140, 140)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
 $btnStop.FlatAppearance.BorderSize = 0
