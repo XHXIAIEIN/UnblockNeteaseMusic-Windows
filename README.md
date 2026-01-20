@@ -11,7 +11,7 @@
 3. 点击「启动」
 4. 网易云客户端设置代理：设置 → 工具 → 自定义代理
    - 服务器：`127.0.0.1`
-   - 端口：`8080`
+   - 端口：`3610`
    - 类型：`HTTP`
 5. 重启网易云音乐
 
@@ -22,7 +22,7 @@
 ```json
 {
   "sources": ["kuwo", "kugou", "migu", "bilibili"],
-  "port": 8080,
+  "port": 3610,
   "enableFlac": false,
   "enableLocalVip": false,
   "blockAds": false

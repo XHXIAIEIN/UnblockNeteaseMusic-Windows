@@ -10,7 +10,7 @@ $exeSize = 37902453  # 预估大小
 
 # 默认配置
 $defaultCfg = @{
-    sources=@("kuwo","kugou","migu","bilibili"); port=8080
+    sources=@("kuwo","kugou","migu","bilibili"); port=3610
     enableFlac=$false; enableLocalVip=$false; blockAds=$false
     selectMaxBr=$false; minBr=0; searchAlbum=$false; followSourceOrder=$false
     strict=$false; proxyUrl=""; forceHost=""; endpoint=""; cnrelay=""
