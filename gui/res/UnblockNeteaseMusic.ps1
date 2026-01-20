@@ -115,8 +115,8 @@ $btnStop.Location = New-Object System.Drawing.Point(140, 120)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
 $btnStop.FlatAppearance.BorderSize = 0
-$btnStop.BackColor = $colorGray
-$btnStop.ForeColor = $colorDarkGray
+$btnStop.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
+$btnStop.ForeColor = [System.Drawing.Color]::White
 $btnStop.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
 $btnStop.Enabled = $false
 $form.Controls.Add($btnStop)
@@ -163,8 +163,6 @@ function Start-Proxy {
         $btnStart.BackColor = $colorGray
         $btnStart.ForeColor = $colorDarkGray
         $btnStop.Enabled = $true
-        $btnStop.BackColor = $colorRed
-        $btnStop.ForeColor = [System.Drawing.Color]::White
     } catch {
         $lblStatus.Text = "启动失败"
         $lblStatus.ForeColor = $colorRed
@@ -222,8 +220,6 @@ $btnStop.Add_Click({
     $btnStart.BackColor = $colorGreen
     $btnStart.ForeColor = [System.Drawing.Color]::White
     $btnStop.Enabled = $false
-    $btnStop.BackColor = $colorGray
-    $btnStop.ForeColor = $colorDarkGray
 })
 
 $form.Add_FormClosing({
