@@ -1,6 +1,6 @@
 {
   "sources": ["kuwo", "kugou", "migu", "bilibili"],
-  "port": 8080,
+  "port": 3610,
 
   "enableFlac": false,
   "enableLocalVip": false,
