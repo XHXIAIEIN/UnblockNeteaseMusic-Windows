@@ -158,7 +158,8 @@ function Start-Proxy {
         $progressBar.Visible = $false
         $btnStart.Text = "运行中"
         $btnStart.Enabled = $false
-        $btnStart.BackColor = $colorGreenDark
+        $btnStart.BackColor = $colorGray
+        $btnStart.ForeColor = $colorDarkGray
         $btnStop.Enabled = $true
         $btnStop.BackColor = $colorRed
     } catch {
@@ -216,6 +217,7 @@ $btnStop.Add_Click({
     $btnStart.Text = "启动"
     $btnStart.Enabled = $true
     $btnStart.BackColor = $colorGreen
+    $btnStart.ForeColor = [System.Drawing.Color]::White
     $btnStop.Enabled = $false
     $btnStop.BackColor = $colorGray
 })
