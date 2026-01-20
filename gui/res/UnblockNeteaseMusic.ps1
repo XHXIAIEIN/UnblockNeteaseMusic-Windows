@@ -82,6 +82,11 @@ $lblHelp.Location = New-Object System.Drawing.Point(20, 95)
 $lblHelp.AutoSize = $true
 $lblHelp.LinkColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
 $lblHelp.Add_LinkClicked({
+    $currentCfg = $cfg
+    if (Test-Path $cfgPath) {
+        try { $currentCfg = Get-Content $cfgPath -Raw | ConvertFrom-Json } catch {}
+    }
+
     $helpForm = New-Object System.Windows.Forms.Form
     $helpForm.Text = "使用说明"
     $helpForm.Size = New-Object System.Drawing.Size(300, 280)
@@ -92,7 +97,7 @@ $lblHelp.Add_LinkClicked({
     $helpForm.BackColor = [System.Drawing.Color]::White
 
     $helpText = New-Object System.Windows.Forms.Label
-    $helpText.Text = "1. 启动本程序`n`n2. 打开网易云音乐客户端`n`n3. 设置 → 工具 → 自定义代理`n`n4. 服务器: 127.0.0.1`n    端口: $($cfg.port)`n    类型: HTTP`n`n5. 点击确定，重启客户端"
+    $helpText.Text = "1. 启动本程序`n`n2. 打开网易云音乐客户端`n`n3. 设置 → 工具 → 自定义代理`n`n4. 服务器: 127.0.0.1`n    端口: $($currentCfg.port)`n    类型: HTTP`n`n5. 点击确定，重启客户端"
     $helpText.Location = New-Object System.Drawing.Point(20, 20)
     $helpText.AutoSize = $true
     $helpText.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
