@@ -89,14 +89,15 @@ $colorGreenDark = [System.Drawing.Color]::FromArgb(56, 142, 60)
 $colorRed = [System.Drawing.Color]::FromArgb(229, 57, 53)
 $colorOrange = [System.Drawing.Color]::FromArgb(255, 152, 0)
 $colorBlue = [System.Drawing.Color]::FromArgb(33, 150, 243)
-$colorGray = [System.Drawing.Color]::FromArgb(189, 189, 189)
-$colorDarkGray = [System.Drawing.Color]::FromArgb(117, 117, 117)
+$colorGray = [System.Drawing.Color]::FromArgb(224, 224, 224)
+$colorDarkGray = [System.Drawing.Color]::FromArgb(158, 158, 158)
 
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
 $btnStart.Location = New-Object System.Drawing.Point(20, 120)
 $btnStart.Size = New-Object System.Drawing.Size(110, 35)
 $btnStart.FlatStyle = "Flat"
+$btnStart.FlatAppearance.BorderSize = 0
 $btnStart.ForeColor = [System.Drawing.Color]::White
 $btnStart.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
 if ($needDownload) {
@@ -113,8 +114,9 @@ $btnStop.Text = "停止"
 $btnStop.Location = New-Object System.Drawing.Point(140, 120)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
+$btnStop.FlatAppearance.BorderSize = 0
 $btnStop.BackColor = $colorGray
-$btnStop.ForeColor = [System.Drawing.Color]::White
+$btnStop.ForeColor = $colorDarkGray
 $btnStop.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
 $btnStop.Enabled = $false
 $form.Controls.Add($btnStop)
@@ -162,6 +164,7 @@ function Start-Proxy {
         $btnStart.ForeColor = $colorDarkGray
         $btnStop.Enabled = $true
         $btnStop.BackColor = $colorRed
+        $btnStop.ForeColor = [System.Drawing.Color]::White
     } catch {
         $lblStatus.Text = "启动失败"
         $lblStatus.ForeColor = $colorRed
@@ -220,6 +223,7 @@ $btnStop.Add_Click({
     $btnStart.ForeColor = [System.Drawing.Color]::White
     $btnStop.Enabled = $false
     $btnStop.BackColor = $colorGray
+    $btnStop.ForeColor = $colorDarkGray
 })
 
 $form.Add_FormClosing({
