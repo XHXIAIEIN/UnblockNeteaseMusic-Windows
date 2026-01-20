@@ -6,7 +6,7 @@
 
 ## 下载
 
-下载 **[UnblockNeteaseMusic-Windows.zip](https://github.com/XHXIAIEIN/UnblockNeteaseMusic-Windows/releases/latest/download/UnblockNeteaseMusic-Windows.zip)**
+点击下载 **[UnblockNeteaseMusic-Windows.zip](https://github.com/XHXIAIEIN/UnblockNeteaseMusic-Windows/releases/latest/download/UnblockNeteaseMusic-Windows.zip)**
 
 或前往 [Releases](https://github.com/XHXIAIEIN/UnblockNeteaseMusic-Windows/releases) 页面下载。
 
