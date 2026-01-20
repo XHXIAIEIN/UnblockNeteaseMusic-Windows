@@ -6,6 +6,7 @@ $exePath = Join-Path $scriptDir "unblockneteasemusic.exe"
 $certPath = Join-Path $scriptDir "ca.crt"
 $cfgPath = Join-Path $scriptDir "config.json"
 $exeUrl = "https://github.com/UnblockNeteaseMusic/server/releases/download/v0.28.0/unblockneteasemusic-win-x64.exe"
+$exeSize = 37902453  # 预估大小
 
 # 默认配置
 $defaultCfg = @{
@@ -21,7 +22,9 @@ if (Test-Path $cfgPath) {
     try { $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json } catch {}
 }
 
-# 图标 (播放按钮)
+$needDownload = -not (Test-Path $exePath)
+
+# 图标
 $iconBase64 = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgIAQZmZmYExMTKBMTEzQTExM0ExMTKBmZmZggICAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGZmZmBMTEzwb29v/5ubm/+srKz/rKys/5ubm/9vb2//TExM8GZmZmAAAAAAAAAAAAAAAAAAAAAAAAAAAABMTEyga2tr/6urq//IyMj/0NDQ/9DQ0P/IyMj/q6ur/2tra/9MTEygAAAAAAAAAAAAAAAAAAAAAExMTKB2dnb/wcHB/9DQ0P/Q0ND/0NDQ/9DQ0P/Q0ND/wcHB/3Z2dv9MTEygAAAAAAAAAAAAAAAAAAAAAExMTNCenp7/0NDQ/9DQ0P+AgID/UlJS/1JSUv+AgID/0NDQ/56env9MTEzQAAAAAAAAAAAAAAAAAAAAAExMTNCurq7/0NDQ/6ampv8wMDD/AAAA/wAAAP8wMDD/pqam/66urv9MTEzQAAAAAAAAAAAAAAAAAAAAAExMTNCurq7/0NDQ/6ampv8wMDD/AAAA/wAAAP8wMDD/pqam/66urv9MTEzQAAAAAAAAAAAAAAAAAAAAAExMTNCenp7/0NDQ/9DQ0P+AgID/QEBA/0BAQP+AgID/0NDQ/56env9MTEzQAAAAAAAAAAAAAAAAAAAAAExMTKB2dnb/wcHB/9DQ0P/Q0ND/0NDQ/9DQ0P/Q0ND/wcHB/3Z2dv9MTEygAAAAAAAAAAAAAAAAAAAAAAAAAACATEyga2tr/6urq//IyMj/0NDQ/9DQ0P/IyMj/q6ur/2tra/9MTEqgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGZmZmBMTEzwb29v/5ubm/+srKz/rKys/5ubm/9vb2//TExM8GZmZmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgIAQZmZmYExMTKBMTEzQTExM0ExMTKBmZmZggICAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAP5/AAD8PwAA+B8AAPgfAADwDwAA8A8AAPAPAADwDwAA8A8AAPgfAAD4HwAA/D8AAP5/AAD//wAA//8AAA=="
 $iconBytes = [Convert]::FromBase64String($iconBase64)
 $iconStream = New-Object IO.MemoryStream($iconBytes, 0, $iconBytes.Length)
@@ -39,19 +42,28 @@ $form.Icon = $icon
 
 # 状态
 $lblStatus = New-Object System.Windows.Forms.Label
-$lblStatus.Text = "已停止"
 $lblStatus.Location = New-Object System.Drawing.Point(20, 20)
 $lblStatus.Font = New-Object System.Drawing.Font("Microsoft YaHei", 14)
 $lblStatus.AutoSize = $true
-$lblStatus.ForeColor = [System.Drawing.Color]::Gray
+if ($needDownload) {
+    $lblStatus.Text = "首次使用"
+    $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(200, 120, 0)
+} else {
+    $lblStatus.Text = "已停止"
+    $lblStatus.ForeColor = [System.Drawing.Color]::Gray
+}
 $form.Controls.Add($lblStatus)
 
 # 端口信息
 $lblInfo = New-Object System.Windows.Forms.Label
-$lblInfo.Text = "代理 127.0.0.1:$($cfg.port)"
 $lblInfo.Location = New-Object System.Drawing.Point(20, 55)
 $lblInfo.AutoSize = $true
 $lblInfo.ForeColor = [System.Drawing.Color]::DarkGray
+if ($needDownload) {
+    $lblInfo.Text = "点击启动将下载核心程序 (~37MB)"
+} else {
+    $lblInfo.Text = "代理 127.0.0.1:$($cfg.port)"
+}
 $form.Controls.Add($lblInfo)
 
 # 音源信息
@@ -63,10 +75,18 @@ $lblSrc.AutoSize = $true
 $lblSrc.ForeColor = [System.Drawing.Color]::DarkGray
 $form.Controls.Add($lblSrc)
 
+# 进度条
+$progressBar = New-Object System.Windows.Forms.ProgressBar
+$progressBar.Location = New-Object System.Drawing.Point(20, 108)
+$progressBar.Size = New-Object System.Drawing.Size(230, 8)
+$progressBar.Style = "Continuous"
+$progressBar.Visible = $false
+$form.Controls.Add($progressBar)
+
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
-$btnStart.Text = "启动"
-$btnStart.Location = New-Object System.Drawing.Point(20, 110)
+$btnStart.Text = if ($needDownload) { "下载并启动" } else { "启动" }
+$btnStart.Location = New-Object System.Drawing.Point(20, 120)
 $btnStart.Size = New-Object System.Drawing.Size(110, 35)
 $btnStart.FlatStyle = "Flat"
 $btnStart.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
@@ -75,7 +95,7 @@ $form.Controls.Add($btnStart)
 
 $btnStop = New-Object System.Windows.Forms.Button
 $btnStop.Text = "停止"
-$btnStop.Location = New-Object System.Drawing.Point(140, 110)
+$btnStop.Location = New-Object System.Drawing.Point(140, 120)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
 $btnStop.Enabled = $false
@@ -86,32 +106,17 @@ function Install-Cert {
     return $true
 }
 
-function Download-Exe {
-    if (Test-Path $exePath) { return $true }
-    $lblStatus.Text = "下载中..."
-    $form.Refresh()
-    try {
-        Invoke-WebRequest -Uri $exeUrl -OutFile $exePath -UseBasicParsing
-        return (Test-Path $exePath)
-    } catch { return $false }
-}
-
-$btnStart.Add_Click({
-    if (-not (Install-Cert)) { return }
-    if (-not (Download-Exe)) { $lblStatus.Text = "下载失败"; return }
-
+function Start-Proxy {
     $p = $cfg.port
     $src = if ($cfg.sources -is [array]) { $cfg.sources -join ' ' } else { $cfg.sources }
-    $args = "-p ${p}:$([int]$p + 363) -o $src"
+    $arguments = "-p ${p}:$([int]$p + 363) -o $src"
 
-    # 命令行参数
-    if ($cfg.proxyUrl) { $args += " -u `"$($cfg.proxyUrl)`"" }
-    if ($cfg.forceHost) { $args += " -f `"$($cfg.forceHost)`"" }
-    if ($cfg.endpoint) { $args += " -e `"$($cfg.endpoint)`"" }
-    if ($cfg.cnrelay) { $args += " -c `"$($cfg.cnrelay)`"" }
-    if ($cfg.strict) { $args += " -s" }
+    if ($cfg.proxyUrl) { $arguments += " -u `"$($cfg.proxyUrl)`"" }
+    if ($cfg.forceHost) { $arguments += " -f `"$($cfg.forceHost)`"" }
+    if ($cfg.endpoint) { $arguments += " -e `"$($cfg.endpoint)`"" }
+    if ($cfg.cnrelay) { $arguments += " -c `"$($cfg.cnrelay)`"" }
+    if ($cfg.strict) { $arguments += " -s" }
 
-    # 环境变量
     if ($cfg.enableFlac) { $env:ENABLE_FLAC = "true" }
     if ($cfg.enableLocalVip) { $env:ENABLE_LOCAL_VIP = "true" }
     if ($cfg.blockAds) { $env:BLOCK_ADS = "true" }
@@ -121,8 +126,6 @@ $btnStart.Add_Click({
     if ($cfg.followSourceOrder) { $env:FOLLOW_SOURCE_ORDER = "true" }
     if ($cfg.noCache) { $env:NO_CACHE = "true" }
     if ($cfg.logLevel) { $env:LOG_LEVEL = $cfg.logLevel }
-
-    # Cookie
     if ($cfg.neteaseCookie) { $env:NETEASE_COOKIE = $cfg.neteaseCookie }
     if ($cfg.qqCookie) { $env:QQ_COOKIE = $cfg.qqCookie }
     if ($cfg.miguCookie) { $env:MIGU_COOKIE = $cfg.miguCookie }
@@ -130,14 +133,57 @@ $btnStart.Add_Click({
     if ($cfg.youtubeKey) { $env:YOUTUBE_KEY = $cfg.youtubeKey }
 
     try {
-        $script:process = Start-Process -FilePath $exePath -ArgumentList $args -PassThru -WindowStyle Hidden
+        $script:process = Start-Process -FilePath $exePath -ArgumentList $arguments -PassThru -WindowStyle Hidden
         $lblStatus.Text = "运行中"
         $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(0, 150, 0)
+        $lblInfo.Text = "代理 127.0.0.1:$($cfg.port)"
+        $progressBar.Visible = $false
+        $btnStart.Text = "启动"
         $btnStart.Enabled = $false
         $btnStop.Enabled = $true
     } catch {
         $lblStatus.Text = "启动失败"
+        $lblStatus.ForeColor = [System.Drawing.Color]::Red
     }
+}
+
+# 下载进度定时器
+$timer = New-Object System.Windows.Forms.Timer
+$timer.Interval = 300
+$timer.Add_Tick({
+    if (Test-Path $exePath) {
+        $size = (Get-Item $exePath).Length
+        $percent = [math]::Min(100, [math]::Round($size / $exeSize * 100))
+        $progressBar.Value = $percent
+        $lblStatus.Text = "下载中 $percent%"
+
+        if ($size -ge $exeSize - 1000) {
+            $timer.Stop()
+            $progressBar.Value = 100
+            Start-Sleep -Milliseconds 200
+            Start-Proxy
+        }
+    }
+})
+
+$btnStart.Add_Click({
+    if (-not (Install-Cert)) { return }
+
+    if (Test-Path $exePath) {
+        Start-Proxy
+        return
+    }
+
+    # 后台下载
+    $lblStatus.Text = "下载中 0%"
+    $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(0, 120, 200)
+    $lblInfo.Text = "正在从 GitHub 下载..."
+    $progressBar.Value = 0
+    $progressBar.Visible = $true
+    $btnStart.Enabled = $false
+
+    Start-Process -WindowStyle Hidden -FilePath "powershell" -ArgumentList "-Command", "Invoke-WebRequest -Uri '$exeUrl' -OutFile '$exePath' -UseBasicParsing"
+    $timer.Start()
 })
 
 $btnStop.Add_Click({
@@ -150,6 +196,7 @@ $btnStop.Add_Click({
 })
 
 $form.Add_FormClosing({
+    $timer.Stop()
     if ($script:process) { try { $script:process.Kill() } catch {} }
     Get-Process -Name "unblockneteasemusic" -ErrorAction SilentlyContinue | Stop-Process -Force
 })
