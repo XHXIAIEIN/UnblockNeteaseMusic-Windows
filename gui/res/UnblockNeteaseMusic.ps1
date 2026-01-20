@@ -24,7 +24,7 @@ if (Test-Path $cfgPath) {
 
 $needDownload = -not (Test-Path $exePath)
 
-# 图标 (官方logo)
+# 图标 (UnblockNeteaseMusic)
 $iconBase64 = "AAABAAEAEBAAAAEAIADzAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAAFzUkdCAK7OHOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACiElEQVQ4T7WPW0hTcRzHR48VmU7nznacCzfd7Ww7usvZdNlMnZcjODanWD2sHoIwegmpHnpSMXzwLZO0hyRiZl6ixh6EIRIFUl5AJ4mWIkTeZmUXd7Z9QylhC3yqD/xefv//5wM/Hu8/c6RdlkYmLw/FKzye0atIZx8p+Z0+JX9yhBLuDOmICZ9WeKePEpw9J0s7kezwutmCo+Ml6muPVZmBPnnqxnN1Bka1AgQoAfw6AkGDGONGEgGawIBGsDqsJwf8xYqGfXnIoZMOlukfbtfmg3PSmLXnIkCL0a9MxxMFH8NUJka0QjzTEwgyUsyXa7DrYbDuNmPQLsvh9dmpvDYmR7ZWqQnATSNepcB3VoPFUiWCJgle0GK8Pi3HIktjs47Bl3oLwnUMcMGGuRq64+CMbyzlQ4MJ3K2L4LylQL0ZkVod1p3GeNhjxWePBVtuM7bqGHxtsGKnntmertQ1HwQ+WUXdaG1CdKAXsTE/Ije9iFTkYq2Kim24mX0x7LFgw2XCdjUFfwHZdiDvETII2nH7EriuVsTevgTX0QzOIcdKiTy+5jJh023GSoUGs9ZsLJlJjKgymhICM7bsG/Dawd1r/T1tiDYW4YNNGl+w5yFUdApTBhGmjWIsWyV4RQvPJwTmyxRX4KIQu94IrqsF0f77iDYWYtkmjb3JJ/bFaROJkDkLHwuzMU6LahICcw4FsV6t9oFVAVdrEbnMIlqjwfIZWXzSIMaMicR7iwQhJgtBWtRzV5KSmhD4w7tytSvsyFuAkwJc+XuB2KyRxGqhBBMG8cxTrbAi2fmLTl3KyZVKVecPpz6661Ds3f5zTE+0aDN5x5L/HspUqapoqTin50Eu35j89s/4BThFRjat+gcMAAAAAElFTkSuQmCC"
 $iconBytes = [Convert]::FromBase64String($iconBase64)
 $iconStream = New-Object IO.MemoryStream($iconBytes, 0, $iconBytes.Length)
@@ -83,14 +83,29 @@ $progressBar.Style = "Continuous"
 $progressBar.Visible = $false
 $form.Controls.Add($progressBar)
 
+# 颜色定义
+$colorGreen = [System.Drawing.Color]::FromArgb(76, 175, 80)
+$colorGreenDark = [System.Drawing.Color]::FromArgb(56, 142, 60)
+$colorRed = [System.Drawing.Color]::FromArgb(229, 57, 53)
+$colorOrange = [System.Drawing.Color]::FromArgb(255, 152, 0)
+$colorBlue = [System.Drawing.Color]::FromArgb(33, 150, 243)
+$colorGray = [System.Drawing.Color]::FromArgb(189, 189, 189)
+$colorDarkGray = [System.Drawing.Color]::FromArgb(117, 117, 117)
+
 # 按钮
 $btnStart = New-Object System.Windows.Forms.Button
-$btnStart.Text = if ($needDownload) { "下载并启动" } else { "启动" }
 $btnStart.Location = New-Object System.Drawing.Point(20, 120)
 $btnStart.Size = New-Object System.Drawing.Size(110, 35)
 $btnStart.FlatStyle = "Flat"
-$btnStart.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
 $btnStart.ForeColor = [System.Drawing.Color]::White
+$btnStart.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
+if ($needDownload) {
+    $btnStart.Text = "下载并启动"
+    $btnStart.BackColor = $colorOrange
+} else {
+    $btnStart.Text = "启动"
+    $btnStart.BackColor = $colorGreen
+}
 $form.Controls.Add($btnStart)
 
 $btnStop = New-Object System.Windows.Forms.Button
@@ -98,8 +113,9 @@ $btnStop.Text = "停止"
 $btnStop.Location = New-Object System.Drawing.Point(140, 120)
 $btnStop.Size = New-Object System.Drawing.Size(110, 35)
 $btnStop.FlatStyle = "Flat"
-$btnStop.BackColor = [System.Drawing.Color]::FromArgb(180, 180, 180)
+$btnStop.BackColor = $colorGray
 $btnStop.ForeColor = [System.Drawing.Color]::White
+$btnStop.Font = New-Object System.Drawing.Font("Microsoft YaHei", 9)
 $btnStop.Enabled = $false
 $form.Controls.Add($btnStop)
 
@@ -137,17 +153,17 @@ function Start-Proxy {
     try {
         $script:process = Start-Process -FilePath $exePath -ArgumentList $arguments -PassThru -WindowStyle Hidden
         $lblStatus.Text = "运行中"
-        $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(0, 150, 0)
+        $lblStatus.ForeColor = $colorGreenDark
         $lblInfo.Text = "代理 127.0.0.1:$($cfg.port)"
         $progressBar.Visible = $false
         $btnStart.Text = "运行中"
         $btnStart.Enabled = $false
-        $btnStart.BackColor = [System.Drawing.Color]::FromArgb(180, 180, 180)
+        $btnStart.BackColor = $colorGreenDark
         $btnStop.Enabled = $true
-        $btnStop.BackColor = [System.Drawing.Color]::FromArgb(200, 60, 60)
+        $btnStop.BackColor = $colorRed
     } catch {
         $lblStatus.Text = "启动失败"
-        $lblStatus.ForeColor = [System.Drawing.Color]::Red
+        $lblStatus.ForeColor = $colorRed
     }
 }
 
@@ -180,11 +196,13 @@ $btnStart.Add_Click({
 
     # 后台下载
     $lblStatus.Text = "下载中 0%"
-    $lblStatus.ForeColor = [System.Drawing.Color]::FromArgb(0, 120, 200)
+    $lblStatus.ForeColor = $colorBlue
     $lblInfo.Text = "正在从 GitHub 下载..."
     $progressBar.Value = 0
     $progressBar.Visible = $true
+    $btnStart.Text = "下载中..."
     $btnStart.Enabled = $false
+    $btnStart.BackColor = $colorBlue
 
     Start-Process -WindowStyle Hidden -FilePath "powershell" -ArgumentList "-Command", "Invoke-WebRequest -Uri '$exeUrl' -OutFile '$exePath' -UseBasicParsing"
     $timer.Start()
@@ -194,12 +212,12 @@ $btnStop.Add_Click({
     if ($script:process) { try { $script:process.Kill() } catch {} }
     Get-Process -Name "unblockneteasemusic" -ErrorAction SilentlyContinue | Stop-Process -Force
     $lblStatus.Text = "已停止"
-    $lblStatus.ForeColor = [System.Drawing.Color]::Gray
+    $lblStatus.ForeColor = $colorDarkGray
     $btnStart.Text = "启动"
     $btnStart.Enabled = $true
-    $btnStart.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
+    $btnStart.BackColor = $colorGreen
     $btnStop.Enabled = $false
-    $btnStop.BackColor = [System.Drawing.Color]::FromArgb(180, 180, 180)
+    $btnStop.BackColor = $colorGray
 })
 
 $form.Add_FormClosing({
